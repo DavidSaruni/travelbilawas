@@ -1,0 +1,114 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} UI Forms {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    <!-- [ breadcrumb ] start -->
+                    <div class="page-header">
+                        <div class="page-block">
+                            <div class="row align-items-center">
+                                <div class="col-md-12">
+                                    <div class="page-header-title">
+                                        <h5 class="m-b-10">Our Services</h5>
+                                    </div>
+                                    <ul class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
+                                        <li class="breadcrumb-item"><a href="javascript:">Bookings</a></li>
+                                        <li class="breadcrumb-item"><a href="javascript:">Transaction</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- [ breadcrumb ] end -->
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            <!-- [ Main Content ] start -->
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5>Payment Form</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <form  method="POST">
+                                                        <div class="row">
+                                                            <input type="text" name="activity" value="Parcel_transport" hidden>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputLocation"><strong>Username</strong></label>
+                                                                <input type="text" name="username" value="{{session['username']}}" class="form-control" id="" readonly>
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputLocation"><strong>Email</strong></label>
+                                                                <input type="email" name="email" value="{{session['email']}}" class="form-control" id="" readonly>
+                                                            </div>
+                                                            {% if table=="trip" %}
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputLocation"><strong>Amount</strong></label>
+                                                                <input type="text" name="amount" value="{{record[8]}}" class="form-control" id="" readonly>
+                                                            </div>
+                                                            {% elif table=="students" %}
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputLocation"><strong>Amount</strong></label>
+                                                                <input type="text" name="amount" value="{{record[8]}}" class="form-control" id="" readonly>
+                                                            </div>
+                                                            {% elif table=="events" %}
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputLocation"><strong>Amount</strong></label>
+                                                                <input type="text" name="amount" value="{{record[8]}}" class="form-control" id="" readonly>
+                                                            </div>
+                                                            {% else %}
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputLocation"><strong>Amount</strong></label>
+                                                                <input type="text" name="amount" value="{{record[6]}}" class="form-control" id="" readonly>
+                                                            </div>
+                                                            {% endif %}
+                                                            
+
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputLocation"><strong>Phone</strong></label>
+                                                                {% if data %}
+                                                                <input type="text" name="phone" maxlength="12" value="{{data[8]}}" class="form-control" id="">
+                                                                <small id="emailHelp" class="form-text text-success">Amount will be deducted from this number</small>
+                                                                {% else %}
+                                                                <input type="text" name="phone" maxlength="12" placeholder="254725602805" class="form-control" id="">
+                                                                <small id="emailHelp" class="form-text text-success">Note that amount will be deducted from this number</small>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <button type="submit" class="btn btn-primary">Pay Now</button>
+                                                    </form>
+                                                </div>
+                                                
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- [ Main Content ] end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <!-- [ Main Content ] end -->
+
+
+{% endblock content %}
+
+{% block javascripts %}{% endblock javascripts %}

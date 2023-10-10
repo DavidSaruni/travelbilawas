@@ -1,0 +1,161 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} UI Forms {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    <!-- [ breadcrumb ] start -->
+                    <div class="page-header">
+                        <div class="page-block">
+                            <div class="row align-items-center">
+                                <div class="col-md-12">
+                                    <div class="page-header-title">
+                                        <h5 class="m-b-10">Our Services</h5>
+                                    </div>
+                                    <ul class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
+                                        <li class="breadcrumb-item"><a href="javascript:">Bookings</a></li>
+                                        <li class="breadcrumb-item"><a href="javascript:">Event Travels</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- [ breadcrumb ] end -->
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            <!-- [ Main Content ] start -->
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5>Event Travel Booking Form</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <h5>Book for an Event Travel Here</h5>
+                                            <hr>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <form action="/event" method="POST">
+                                                        <div class="row">
+                                                            <input type="text" name="activity" value="event_travel" hidden>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputLocation">Type of Event</label>
+                                                                <input type="text" name="event_type" class="form-control" id="inputLocation" aria-describedby="locationHelp" placeholder="Enter Pick Up Location" required>
+
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputDestination">Pickup Location</label>
+                                                                <input type="text" name="location" class="form-control" id="inputDestination" placeholder="Enter Destination" required>
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputDestination">County of Destination</label>
+                                                                <select name="destination" class="form-control" id="inputDestination" placeholder="Enter Destination">
+                                                                    <option selected>{{destination}}</option>
+                                                                    <option value="Nairobi">Nairobi</option>
+                                                                    <option value="Eldoret">Eldoret</option>
+                                                                    <option value="Nakuru">Nakuru</option>
+                                                                    <option value="Nyeri">Nyeri</option>
+                                                                    <option value="Nyahururu">Nyahururu</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputDestination">Constituency</label>
+                                                                <input type="text" name="constituency" class="form-control" id="inputDestination" placeholder="Enter Destination" required>
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputDestination">Town</label>
+                                                                <input type="text" name="town" class="form-control" id="inputDestination" placeholder="Enter Destination" required>
+                                                            </div>
+
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputNoSeats">Number of Passengers</label>
+                                                                <input type="number" name="matatu" class="form-control" id="inputNoSeats" aria-describedby="noSeatsHelp" placeholder="Enter Number of Seats" required>
+                                                            
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputTravelDate">Date of Travel</label>
+                                                                <input type="date" name="date" class="form-control" id="inputTravelDate" placeholder="Enter Date of Travel" required>
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputTime">Time of Travel</label>
+                                                                <input type="time" name="time" class="form-control" id="inputTime" placeholder="Time of Travel" required>
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="amount">Amount</label>
+                                                                <input type="number" name="amount" class="form-control" id="amount" readonly required>
+                                                            </div>
+
+                        
+                                                        </div>
+                                                        <button type="submit" class="btn btn-primary">Book Now</button>
+                                                    </form>
+                                                </div>
+                                                
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- [ Main Content ] end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        // Create a mapping of destination counties to amounts
+        const countyAmounts = {
+            Nairobi: 600,
+            Eldoret: 800,
+            Nakuru: 750,
+            Nyeri: 700,
+            Nyahururu: 900
+            // Add more counties and their respective amounts as needed
+        };
+    
+        function updateAmount() {
+            const selectElement = document.querySelector('select[name="destination"]');
+            const destination = selectElement.value;
+            const matatuElement = document.querySelector('input[name="matatu"]');
+            const matatus = parseInt(matatuElement.value);
+    
+            let amount = '';
+            if (destination && countyAmounts.hasOwnProperty(destination)) {
+                amount = countyAmounts[destination].toString();
+                if (matatus && matatus > 1) {
+                    amount = (countyAmounts[destination] * matatus).toString();
+                }
+            }
+    
+            const amountElement = document.querySelector('input[name="amount"]');
+            amountElement.value = amount;
+        }
+    
+        document.querySelector('select[name="destination"]').addEventListener('change', updateAmount);
+        document.querySelector('input[name="matatu"]').addEventListener('input', updateAmount);
+    
+        updateAmount(); 
+    </script>
+
+
+
+    <!-- [ Main Content ] end -->
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

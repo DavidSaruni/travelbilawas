@@ -1,0 +1,147 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} UI Forms {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    <!-- [ breadcrumb ] start -->
+                    <div class="page-header">
+                        <div class="page-block">
+                            <div class="row align-items-center">
+                                <div class="col-md-12">
+                                    <div class="page-header-title">
+                                        <h5 class="m-b-10">Our Services</h5>
+                                    </div>
+                                    <ul class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
+                                        <li class="breadcrumb-item"><a href="javascript:">Bookings</a></li>
+                                        <li class="breadcrumb-item"><a href="javascript:">Solo Travels</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- [ breadcrumb ] end -->
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            <!-- [ Main Content ] start -->
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5>Solo Travel Booking Form</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <h5>Book a car for yourself:</h5>
+                                            <hr>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <form action="/trip" method="POST">
+                                                        <div class="row">
+                                                                <input type="text" name="activity" value="Trip_travel" hidden class="form-control" id="inputLocation" aria-describedby="locationHelp" required placeholder="Enter Pick Up Location">
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputLocation">Pick-Up Location</label>
+                                                                <input type="text" name="Location" class="form-control" id="inputLocation" aria-describedby="locationHelp" placeholder="Enter Pick Up Location" required>
+
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputDestination">Destination</label>
+                                                                <select class="form-control" name="destination" id="inputDestination" placeholder="Enter Destination" value="{{ destination }}"
+                                                                    style="border: 2px solid #555;">
+                                                                    <option selected>{{ destination }}</option>
+                                                                    <option value="Nairobi">Nairobi</option>
+                                                                    <option value="Eldoret">Eldoret</option>
+                                                                    <option value="Nakuru">Nakuru</option>
+                                                                    <option value="Nyeri">Nyeri</option>
+                                                                    <option value="Nyahururu">Nyahururu</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputNoSeats">Number of Seats</label>
+                                                                <input type="number" class="form-control" name="seats" id="inputNoSeats" aria-describedby="noSeatsHelp" placeholder="Enter Number of Seats" required>
+                                                            
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputTravelDate">Date of Travel</label>
+                                                                <input type="date" class="form-control" name="TravelDate" id="inputTravelDate" placeholder="Enter Date of Travel" required>
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="inputTime">Time of Travel</label>
+                                                                <input type="time" class="form-control" name="Time" id="inputTime" placeholder="Time of Travel" required>
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="amount">Amount</label>
+                                                                <input type="number" name="amount" class="form-control" id="amount" readonly value="{{amount}}" required>
+                                                            </div>
+
+                        
+                                                        </div>
+                                                        <button type="submit" class="btn btn-primary">Submit Booking</button>
+                                                    </form>
+                                                </div>
+                                                
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- [ Main Content ] end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        function updateAmount() {
+            const selectElement = document.querySelector('select[name="destination"]');
+            const destination = selectElement.value;
+            const seatsElement = document.querySelector('input[name="seats"]');
+            const seats = parseInt(seatsElement.value);
+    
+            const countyAmounts = {
+                'Nairobi': 800,
+                'Eldoret': 1000,
+                'Nakuru': 900,
+                'Nyeri': 950,
+                'Nyahururu': 850,
+            };
+    
+            let amount = '';
+            if (destination in countyAmounts) {
+                const baseAmount = countyAmounts[destination];
+                amount = baseAmount.toString();
+                if (seats && seats > 1) {
+                    amount = (baseAmount * seats).toString();
+                }
+            }
+    
+            const amountElement = document.querySelector('input[name="amount"]');
+            amountElement.value = amount;
+        }
+    
+        document.querySelector('select[name="destination"]').addEventListener('change', updateAmount);
+        document.querySelector('input[name="seats"]').addEventListener('input', updateAmount);
+    
+        updateAmount();
+    </script>
+    
+    
+    <!-- [ Main Content ] end -->
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

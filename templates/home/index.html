@@ -1,0 +1,630 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    <!-- [ breadcrumb ] start -->
+                    <div class="page-header">
+                        <div class="page-block">
+                            <div class="row align-items-center">
+                                <div class="col-md-12">
+                                    <div class="page-header-title">
+                                        {% if session['role']=='Admin' %}
+                                        <h5 class="m-b-10">Welcome, {{session['username']}} below is the customer's booking history</h5>
+                                        {% else %}
+                                        <h5 class="m-b-10">Welcome, {{session['username']}} this is your booking history</h5>
+                                        {% endif %}
+                                    </div>
+                                    <ul class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>/Bookings
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- [ breadcrumb ] end -->
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            <!-- [ Main Content ] start -->
+                            {% if session['role']=="Admin" %}
+                            <div class="row">
+                                <!--[ daily sales section ] start-->
+                                <div class="col-md-6 col-xl-4">
+                                    <div class="card daily-sales">
+                                        <div class="card-block">
+                                            <h6 class="mb-4">Daily Bookings</h6>
+                                            <div class="row d-flex align-items-center">
+                                                <div class="col-9">
+                                                    <h3 class="f-w-300 d-flex align-items-center m-b-0"><i
+                                                            class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>
+                                                        {{total_count}}</h3>
+                                                </div>
+
+                                                <div class="col-3 text-right">
+                                                    <p class="m-b-0">{{per_cent}}%</p>
+                                                </div>
+                                            </div>
+                                            <div class="progress m-t-30" style="height: 7px;">
+                                                <div class="progress-bar progress-c-theme" role="progressbar"
+                                                        style="width: {{per_cent}}%;" aria-valuenow="90" aria-valuemin="0"
+                                                        aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--[ daily sales section ] end-->
+                                <!--[ Monthly  sales section ] starts-->
+                                <div class="col-md-6 col-xl-4">
+                                    <div class="card Monthly-sales">
+                                        <div class="card-block">
+                                            <h6 class="mb-4">Monthly Bookings</h6>
+                                            <div class="row d-flex align-items-center">
+                                                <div class="col-9">
+                                                    <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i
+                                                            class="feather icon-arrow-down text-c-red f-30 m-r-10"></i>
+                                                        2,942</h3>
+                                                </div>
+                                                <div class="col-3 text-right">
+                                                    <p class="m-b-0">36%</p>
+                                                </div>
+                                            </div>
+                                            <div class="progress m-t-30" style="height: 7px;">
+                                                <div class="progress-bar progress-c-theme2" role="progressbar"
+                                                        style="width: 35%;" aria-valuenow="35" aria-valuemin="0"
+                                                        aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--[ Monthly  sales section ] end-->
+                                <!--[ year  sales section ] starts-->
+                                <div class="col-md-12 col-xl-4">
+                                    <div class="card yearly-sales">
+                                        <div class="card-block">
+                                            <h6 class="mb-4">Yearly Bookings</h6>
+                                            <div class="row d-flex align-items-center">
+                                                <div class="col-9">
+                                                    <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i
+                                                            class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>
+                                                        8,638</h3>
+                                                </div>
+                                                <div class="col-3 text-right">
+                                                    <p class="m-b-0">80%</p>
+                                                </div>
+                                            </div>
+                                            <div class="progress m-t-30" style="height: 7px;">
+                                                <div class="progress-bar progress-c-theme" role="progressbar"
+                                                        style="width: 70%;" aria-valuenow="70" aria-valuemin="0"
+                                                        aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <div class="col-xl-12 col-md-12 m-b-30" >
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                                                aria-controls="home" aria-selected="false">SOLO</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link active show" id="profile-tab" data-toggle="tab"
+                                                href="#profile" role="tab" aria-controls="profile" aria-selected="true">INSTITUTION</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact"
+                                                role="tab" aria-controls="contact" aria-selected="false">EVENT</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#parcel"
+                                                role="tab" aria-controls="contact" aria-selected="true">PARCEL</a>
+                                        </li>
+                                    </ul>
+                                    {% if session['role']=="Customer" %}
+                                    {% if user_result or user_results or user_students or user_parcel %}
+                                    <div class="tab-content resize" id="myTabContent">
+                                        <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    
+                                                    {% if user_result %}
+                                                <tr>
+                                                    <th>User</th>
+                                                    <th>Activity</th>
+                                                    <th>Time</th>
+                                                    <th>Status</th>
+                                                    <th class="text-right"></th>
+                                                    <th>Make_payment</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for booking in user_result %}
+                                                <tr>
+                                                    <td>
+                                                        <h6 class="m-0"><img class="rounded-circle m-r-10"
+                                                                                style="width:40px;"
+                                                                                src="{{ url_for('static',filename='assets/images/user/avatar-2.jpg') }}"
+                                                                                alt="activity-user">{{session['username']}}</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0">Solo_Travel</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0">{{ booking[7] }} PM</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0 text-c-green">{{ booking[9] }}</h6>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        {% if booking[9]=="Approved" %}
+                                                        <i class="fas fa-circle text-c-green f-10"></i>
+                                                        {% elif booking[9]=="Declined" %}
+                                                        <i class="fas fa-circle text-c-red f-10"></i>
+                                                        {% else %}
+                                                        <i class="fas fa-circle text-c-yellow f-10"></i>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {% if booking[9]=="Declined" %}
+                                                        <a  class="btn btn-success">Pay</a></td>
+                                                        {% else %}
+                                                        <a href="/pay/{{booking[0]}}/trip" class="btn btn-outline-success">Pay</a></td>
+                                                        {% endif %}
+                                                </tr>
+                                                {% endfor %}
+                                                {% else %}
+                                                <section class="empty-booking">
+                                                    <h2 class="empty-booking-title">Embark on Your Solo Adventure</h2>
+                                                    <p class="empty-booking-description">It looks like you haven't made any bookings for solo travel yet. Don't miss the chance to explore the world on your own terms. Click the link below to make your booking now!</p>
+                                                    <a class="btn btn-primary" href="/trip">Book Now</a>
+                                                </section>
+                                                {% endif %}
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                        <div class="tab-pane fade active show" id="profile" role="tabpanel"
+                                                aria-labelledby="profile-tab">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    {% if user_students %}
+                                                <tr>
+                                                    <th>User</th>
+                                                    <th>Activity</th>
+                                                    <th>Time</th>
+                                                    <th>Status</th>
+                                                    <th class="text-right"></th>
+                                                    <th>Make_payment</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                   
+                                                    {% for row in user_students %}
+                                                <tr>
+                                                    <td>
+                                                        <h6 class="m-0"><img class="rounded-circle  m-r-10"
+                                                                                style="width:40px;"
+                                                                                src="{{ url_for('static',filename='assets/images/user/avatar-2.jpg') }}"
+                                                                                alt="activity-user">{{session['username']}}</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0">Institution_Travel</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0">{{row[6]}} PM</h6>
+                                                    </td>
+                                                    
+                                                    <td>
+                                                        <h6 class="m-0 text-c-green">{{ row[9] }}</h6>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        {% if row[9]=="Approved" %}
+                                                        <i class="fas fa-circle text-c-green f-10"></i>
+                                                        {% elif row[9]=="Declined" %}
+                                                        <i class="fas fa-circle text-c-red f-10"></i>
+                                                        {% else %}
+                                                        <i class="fas fa-circle text-c-yellow f-10"></i>
+                                                        {% endif %}
+                                                    </td>
+                                                    </td>
+                                                    <td>
+                                                        {% if row[9]=="Declined" %}
+                                                        <a  class="btn btn-success">Pay</a></td>
+                                                        {% else %}
+                                                        <a href="/pay/{{row[0]}}/students" class="btn btn-outline-success">Pay</a></td>
+                                                        {% endif %}
+                                                </tr>
+                                                {% endfor %}
+                                                {% else %}
+                                                <section class="empty-booking">
+                                                    <h2 class="empty-booking-title">Plan Your Institution or Student Travel</h2>
+                                                    <p class="empty-booking-description">It appears you haven't made any bookings for institution or student travel yet. Whether it's for educational purposes or student adventures, we've got you covered. Click the link below to make your booking now!</p>
+                                                    <a class="btn btn-primary" href="/student">Book Now</a>
+                                                </section>
+                                                
+                                                
+                                                {% endif %}
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                        <div class="tab-pane fade" id="contact" role="tabpanel"
+                                                aria-labelledby="contact-tab">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    {% if user_results %}
+                                                <tr>
+                                                    <th>User</th>
+                                                    <th>Activity</th>
+                                                    <th>Time</th>
+                                                    <th>Status</th>
+                                                    <th class="text-right"></th>
+                                                    <th>Make_payment</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for data in user_results %}
+                                                <tr>
+                                                    <td>
+                                                        <h6 class="m-0"><img class="rounded-circle  m-r-10"
+                                                                                style="width:40px;"
+                                                                                src="{{ url_for('static',filename='assets/images/user/avatar-3.jpg') }}"
+                                                                                alt="activity-user">{{session['username']}}</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0">Event_Travel</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0">{{data[6]}} pm</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0 text-c-green">{{ data[12] }}</h6>
+                                                    </td>
+                                                    
+                                                    <td class="text-right">
+                                                        {% if data[12]=="Approved" %}
+                                                        <i class="fas fa-circle text-c-green f-10"></i>
+                                                        {% elif data[12]=="Declined" %}
+                                                        <i class="fas fa-circle text-c-red f-10"></i>
+                                                        {% else %}
+                                                        <i class="fas fa-circle text-c-yellow f-10"></i>
+                                                        {% endif %}
+                                                    </td>
+                                                    
+                                                    <td>
+                                                        {% if data[12]=="Declined" %}
+                                                        <a  class="btn btn-success">Pay</a></td>
+                                                        {% else %}
+                                                        <a href="/pay/{{data[0]}}/events" class="btn btn-outline-success">Pay</a>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                                {% else %}
+                                                <section class="empty-booking">
+                                                    <h2 class="empty-booking-title">No Bookings for Event Travel Yet</h2>
+                                                    <p class="empty-booking-subtitle">Don't miss out on your next adventure!</p>
+                                                    <p class="empty-booking-description">It appears that you haven't made any bookings for event travel. Take action now and secure your travel plans for the upcoming event.</p>
+                                                    <a class="btn btn-primary" href="/event">Book Now</a>
+                                                </section>
+                                                {% endif %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="tab-pane fade" id="parcel" role="tabpanel" aria-labelledby="home-tab">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    {% if user_parcel %}
+                                                <tr>
+                                                    <th>User</th>
+                                                    <th>Activity</th>
+                                                    <th>Pick_Up</th>
+                                                    <th>Parcel Photo</th>
+                                                    <th>Status</th>
+                                                    <th class="text-right"></th>
+                                                    <th>Make_payment</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for data in user_parcel %}
+                                                <tr>
+                                                    <td>
+                                                        <h6 class="m-0"><img class="rounded-circle m-r-10"
+                                                                                style="width:40px;"
+                                                                                src="{{ url_for('static',filename='assets/images/user/avatar-1.jpg') }}"
+                                                                                alt="activity-user">{{session['username']}}</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0">Parcel sending</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0">{{ data[3] }}</h6>
+                                                    </td>
+                                                    <td>
+                                                        <img src="data:image/jpeg;base64, {{data[5]}}" style="border-radius: 50%;" height="50" width="50">
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0 text-c-green">{{ data[7] }}</h6>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        {% if data[7]=="Approved" %}
+                                                        <i class="fas fa-circle text-c-green f-10"></i>
+                                                        {% elif data[7]=="Declined" %}
+                                                        <i class="fas fa-circle text-c-red f-10"></i>
+                                                        {% else %}
+                                                        <i class="fas fa-circle text-c-yellow f-10"></i>
+                                                        {% endif %}
+                                                    </td>
+                                                    
+                                                    <td>
+                                                        {% if data[7]=="Declined" %}
+                                                        <a  class="btn btn-success">Pay</a>
+                                                        {% else %}
+                                                        <a href="/pay/{{data[0]}}/parcel" class="btn btn-outline-success">Pay</a>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                                {% else %}
+                                                <section class="empty-booking">
+                                                    <h2 class="empty-booking-title">No Bookings for Parcel Sending Yet</h2>
+                                                    <p class="empty-booking-subtitle">Don't wait any longer!</p>
+                                                    <p class="empty-booking-description">It looks like you haven't made any bookings for parcel sending yet. Take the first step now and book your parcel delivery with us.</p>
+                                                    <a class="btn btn-primary" href="/parcel">Book Now</a>
+                                                </section>
+                                                {% endif %}
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <marquee behavior="" direction=""><h3 style="padding-top: 50px;"><strong>Your bookings will appear here!!</strong></h3></marquee>
+                                    {% endif %}
+
+                                    {% else %}
+                                    <!-- admin -->
+
+                                    {% if result or results or students or parcel %}
+                                    <div class="tab-content resize" id="myTabContent">
+                                        <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>User</th>
+                                                    <th>Activity</th>
+                                                    <th>Time</th>
+                                                    <th>Status</th>
+                                                    <th class="text-right"></th>
+                                                    <th class="text-center">Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for bookings in result %}
+                                                <tr>
+                                                    <td>
+                                                        {% if image_base64 %}
+                                                        <h6 class="m-0">
+                                                        <img src="data:image/jpeg;base64, {{image_base64|safe}}" style="border-radius: 50%;" height="40" width="40">
+                                                        {{bookings.username}}</h6>
+                                                        {% else %}
+                                                        <h6 class="m-0">
+                                                        <img src="{{ url_for('static',filename='assets/images/user/avatar-1.jpg') }}"style="border-radius: 50%;" height="40" width="40" alt="profile image"
+                                                            class="img-fluid rounded-circle">
+                                                            {{bookings[2]}}</h6>
+                                                        {% endif %}
+                                                        <!-- <h6 class="m-0"><img class="rounded-circle m-r-10"
+                                                                                style="width:40px;"
+                                                                                src="{{ url_for('static',filename='') }}/images/user/avatar-1.jpg"
+                                                                                alt="activity-user">{{bookings.username}}</h6> -->
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0">Solo_Travel</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0">{{ bookings[7] }}PM</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0 text-c-green">{{ bookings[9] }}</h6>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        {% if bookings[9]=="Approved" %}
+                                                        <i class="fas fa-circle text-c-green f-10"></i>
+                                                        {% elif bookings[9]=="Declined" %}
+                                                        <i class="fas fa-circle text-c-red f-10"></i>
+                                                        {% else %}
+                                                        <i class="fas fa-circle text-c-yellow f-10"></i>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="/status/{{bookings[0]}}/trip" class="btn btn-outline-success">Approve/Decline</a>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                        <div class="tab-pane fade active show" id="profile" role="tabpanel"
+                                                aria-labelledby="profile-tab">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>User</th>
+                                                    <th>Activity</th>
+                                                    <th>Time</th>
+                                                    <th>Status</th>
+                                                    <th class="text-right"></th>
+                                                    <th class="text-center">Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for row in students %}
+                                                <tr>
+                                                    <td>
+                                                        <h6 class="m-0"><img class="rounded-circle  m-r-10"
+                                                                                style="width:40px;"
+                                                                                src="{{ url_for('static',filename='assets/images/user/avatar-2.jpg') }}"
+                                                                                alt="activity-user">{{row[2]}}</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0">Institution_Travel</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0">{{row[6]}} PM</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0 text-c-purple">{{row[9]}}</h6>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        {% if row[9]=="Approved" %}
+                                                        <i class="fas fa-circle text-c-green f-10"></i>
+                                                        {% elif row[9]=="Declined" %}
+                                                        <i class="fas fa-circle text-c-red f-10"></i>
+                                                        {% else %}
+                                                        <i class="fas fa-circle text-c-yellow f-10"></i>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="/status/{{row[0]}}/students" class="btn btn-outline-success">Approve/Decline</a>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                        <div class="tab-pane fade" id="contact" role="tabpanel"
+                                                aria-labelledby="contact-tab">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>User</th>
+                                                    <th>Activity</th>
+                                                    <th>Time</th>
+                                                    <th>Status</th>
+                                                    <th class="text-right"></th>
+                                                    <th class="text-center">Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for data in results %}
+                                                <tr>
+                                                    <td>
+                                                        <h6 class="m-0"><img class="rounded-circle  m-r-10"
+                                                                                style="width:40px;"
+                                                                                src="{{ url_for('static',filename='assets/images/user/avatar-3.jpg') }}"
+                                                                                alt="activity-user">{{data[2]}}</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0">Event_Travel</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0">{{data[6]}}</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0 text-c-purple">{{data[12]}}</h6>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        {% if data[12]=="Approved" %}
+                                                        <i class="fas fa-circle text-c-green f-10"></i>
+                                                        {% elif data[12]=="Declined" %}
+                                                        <i class="fas fa-circle text-c-red f-10"></i>
+                                                        {% else %}
+                                                        <i class="fas fa-circle text-c-yellow f-10"></i>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="/status/{{data[0]}}/events" class="btn btn-outline-success">Approve/Decline</a>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="tab-pane fade" id="parcel" role="tabpanel" aria-labelledby="home-tab">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>User</th>
+                                                    <th>Activity</th>
+                                                    <th>Pick_Up</th>
+                                                    <th>Parcel Photo</th>
+                                                    <th>Status</th>
+                                                    <th class="text-right"></th>
+                                                    <th class="text-center">Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for data in parcel %}
+                                                <tr>
+                                                    <td>
+                                                        <h6 class="m-0"><img class="rounded-circle m-r-10"
+                                                                                style="width:40px;"
+                                                                                src="{{ url_for('static',filename='assets/images/user/avatar-1.jpg') }}"
+                                                                                alt="activity-user">{{data[2]}}</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0">Parcel sending</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0">{{ data[3] }}</h6>
+                                                    </td>
+                                                    <td>
+                                                        <img src="data:image/jpeg;base64, {{data[5]}}" style="border-radius: 50%;" height="50" width="50">
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0 text-c-green">{{ data[7] }}</h6>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        {% if data[7]=="Approved" %}
+                                                        <i class="fas fa-circle text-c-green f-10"></i>
+                                                        {% elif data[7]=="Declined" %}
+                                                        <i class="fas fa-circle text-c-red f-10"></i>
+                                                        {% else %}
+                                                        <i class="fas fa-circle text-c-yellow f-10"></i>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="/status/{{data[0]}}/parcel" class="btn btn-outline-success">Approve/Decline</a>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <marquee behavior="" direction=""><h3 style="padding-top: 50px;"><strong>Your bookings will appear here!!</strong></h3></marquee>
+                                    {% endif %}
+
+                                    <!-- admin end -->
+                                    {% endif %}
+                                </div>
+
+                            </div>
+                            <!-- [ Main Content ] end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- [ Main Content ] end -->            
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

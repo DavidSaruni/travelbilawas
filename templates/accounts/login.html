@@ -1,0 +1,93 @@
+{% extends "layouts/base-fullscreen.html" %}
+
+{% block title %} Login {% endblock %}
+
+{% block content %}   
+
+    <div class="auth-wrapper">
+        <div class="auth-content">
+            <div class="auth-bg">
+                <span class="r"></span>
+                <span class="r s"></span>
+                <span class="r s"></span>
+                <span class="r"></span>
+            </div>
+            <div class="card">
+                <div class="card-body text-center">
+
+                    <h3 class="mb-4">Login</h3>
+
+                    <span class="mb-0 text-muted">
+                        
+                        {% with messages=get_flashed_messages(with_categories=True) %}
+                        {% if messages %}
+                        
+                        {% for category,msg in messages %}
+                        
+                        <span class="text-{{category}}">{{ msg | safe }}</span>
+                    
+                        {% endfor %}
+                        {% else %}
+                            Add your credentials
+                        {% endif %}
+                        {% endwith %}
+
+
+                    </span>
+
+                    <br />
+                    <br />
+
+                    <form role="form" method="post" action="">
+                  
+
+                        <div class="input-group mb-3">
+                            <input type="text" name="username" class="form-control" placeholder="Enter your username" value="{{username}}">
+                        </div>
+                        
+                        <div class="input-group mb-4">
+                            <input type="password" name="password" id="passwordInput" class="form-control" placeholder="Enter your password" value="{{password}}">
+                        </div>
+                        <div class="input-group mb-4">
+                            <input type="checkbox" style="width: 20px; height: 20px;" id="showPasswordCheckbox" />show password
+                        </div>
+                        
+                        <button type="submit" name="login" class="btn btn-primary shadow-2 mb-4">Login</button>
+
+                    </form>
+
+                    <p class="mb-0 text-muted">Don’t have an account? <a href="{{ url_for('register') }}" >Sign UP</a></p>
+                    <p class="mb-0 text-muted">Forgot your password? <a style="font-weight: bolder;" href="{{ url_for('forgot') }}" ><strong>Click here</strong></a></p>
+                    
+                    {% if config.SOCIAL_AUTH_GITHUB %}
+                        <div class="mx-2">
+
+                            <a href="{{url_for('authentication_blueprint.login_github')}}" class="btn">
+                                <i class="feather icon-github auth-icon"></i>
+                                
+                            </a>
+                            <br />
+                            <span class="mx-2">Sign IN with GitHub</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const showPasswordCheckbox = document.getElementById('showPasswordCheckbox');
+        const passwordInput = document.getElementById('passwordInput');
+        
+        showPasswordCheckbox.addEventListener('change', function () {
+          if (showPasswordCheckbox.checked) {
+            passwordInput.type = 'text';
+          } else {
+            passwordInput.type = 'password';
+          }
+        });
+        
+        </script>
+
+{% endblock content %}
