@@ -14,10 +14,10 @@ app=Flask(__name__)
 
 
 app.secret_key='booking'
-app.config['MYSQL_HOST']='localhost'
-app.config['MYSQL_USER']='root'
-app.config['MYSQL_PASSWORD']=''
-app.config['MYSQL_DB']='bus_booking'
+app.config['MYSQL_HOST']='db4free.net'
+app.config['MYSQL_USER']='travelbilawas'
+app.config['MYSQL_PASSWORD']='bilawastravel'
+app.config['MYSQL_DB']='travel_db'
 
 
 mysql=MySQL(app)
@@ -87,7 +87,8 @@ def register():
                 hashed_password=bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
                 cur=mysql.connection.cursor()
                 verification_sent_at = int(time.time())
-                cur.execute("INSERT INTO users(username, email, password, role, otp_secret, is_verified, verification_sent_at,phone) VALUES(%s, %s, %s, %s, %s, %s, %s,%s)", (username, email, hashed_password, choice, otp_secret, is_verified, verification_sent_at,phone))
+                reset_sent_at=0
+                cur.execute("INSERT INTO users(username, email, password, role, otp_secret, is_verified, verification_sent_at,reset_sent_at,phone) VALUES(%s, %s, %s, %s, %s, %s, %s,%s,%s)", (username, email, hashed_password, choice, otp_secret, is_verified, verification_sent_at,reset_sent_at,phone))
                 mysql.connection.commit()
                 cur.close()
                 return redirect(url_for('verify'))
