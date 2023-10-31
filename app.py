@@ -360,7 +360,7 @@ def trip():
                 return redirect(url_for('trip'))
             if pick_up==''or destination==''or date==''  or seats=='' or amount=='':
                 flash('All fields are required','danger')
-                return render_template('home/solo-travel.html',location=location,constituency=constituency,town=town,destination=destination,date=date,seats=seats,amount=amount)
+                return render_template('home/solo-travel.html',location=pick_up,destination=destination,date=date,seats=seats,amount=amount)
             cur=mysql.connection.cursor()
             cur.execute("INSERT INTO trip(user_id,username,pick_up,destination,date,seats,time,amount,status)VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)",(user_id,username,pick_up,destination,date,seats,time,amount,status))
             mysql.connection.commit()
@@ -395,7 +395,7 @@ def event():
                 return redirect(url_for('trip'))
             if location==''or destination==''or constituency=='' or town=='' or date==''or number_pass=='' or event_type=='' or amount=='':
                 flash('All fields are required','danger')
-                return render_template('home/event-travel.html',event_type=event_type,town=town,constituency=constituency,location=location,destination=destination,date=date,matatu=matatu,amount=amount)
+                return render_template('home/event-travel.html',event_type=event_type,town=town,constituency=constituency,location=location,destination=destination,date=date,matatu=number_pass,amount=amount)
             cur=mysql.connection.cursor()
             cur.execute("INSERT INTO events(user_id,username,location,destination,date,time,number_pass,amount,event_type,constituency,town,status)VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(user_id,username,location,destination,date,time,number_pass,amount,event_type,constituency,town,status))
             mysql.connection.commit()
@@ -428,8 +428,8 @@ def student():
                 return redirect(url_for('trip'))
             if pick_up == '' or destination=='' or date == '' or time=='' or seats == '' or amount == '':
                 flash('All fields are required', 'danger')
-                return render_template('home/student-travel.html', students=students, institution=institution,
-                                       date=date, matatu=matatu, amount=amount)
+                return render_template('home/student-travel.html', pick_up=pick_up, destination=destination,
+                                       date=date, time=time,seats=seats, amount=amount)
             cur = mysql.connection.cursor()
             cur.execute("INSERT INTO students(user_id, username,pick_up,date,destination,time,seats,amount,status) "
                         "VALUES (%s, %s, %s, %s, %s, %s, %s, %s,%s)",
@@ -468,7 +468,7 @@ def parcel():
                 return redirect(url_for('trip'))
             if pick_up==''or destination==''or photo==''or amount=='':
                 flash('All fields are required','danger')
-                return render_template('home/parcel-transport.html',location=location,destination=destination,photo=photo,amount=amount)
+                return render_template('home/parcel-transport.html',location=pick_up,destination=destination,photo=photo,amount=amount)
             cur=mysql.connection.cursor()
             cur.execute("INSERT INTO parcel(user_id,username,pick_up,destination,photo,amount,status)VALUES(%s,%s,%s,%s,%s,%s,%s)",(user_id,username,pick_up,destination,photo,amount,status))
             mysql.connection.commit()
@@ -590,6 +590,67 @@ def Payment(id,table):
             mysql.connection.commit()
             cur.close()
             return render_template('home/pay.html',record=record,data=data,table="parcel") 
+        
+
+import requests
+import datetime
+from requests.auth import HTTPBasicAuth
+
+@app.route('/transact',methods=['POST','GET'])
+def transact():
+    if 'user_id' and 'role' and 'username' not in session:
+        return redirect(url_for('login'))
+    else:
+        if request.method=='POST':
+            phone=request.form['phone']
+            amount=request.form['amount']
+
+            consumer_key = "nzB2nv1WVUZJ86jNSkK3Z5AxzRb6GL8i"
+            consumer_secret = "MEVkAO7pLPf4n5EF"
+
+            api_URL = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"  # AUTH URL
+            r = requests.get(api_URL, auth=HTTPBasicAuth(consumer_key, consumer_secret))
+
+            data = r.json()
+            access_token = "Bearer" + ' ' + data['access_token']
+
+            #  GETTING THE PASSWORD
+            timestamp = datetime.datetime.today().strftime('%Y%m%d%H%M%S')
+            passkey = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919'
+            business_short_code = "174379"
+            data = business_short_code + passkey + timestamp
+            encoded = base64.b64encode(data.encode())
+            password = encoded.decode('utf-8')
+
+            # BODY OR PAYLOAD
+            payload = {
+                "BusinessShortCode": "174379",
+                "Password": "{}".format(password),
+                "Timestamp": "{}".format(timestamp),
+                "TransactionType": "CustomerPayBillOnline",
+                "Amount": amount,  # use 1 when testing
+                "PartyA":phone,  # change to your number
+                "PartyB": "174379",
+                "PhoneNumber": phone,
+                "CallBackURL": "https://mydomain.com/path",
+                "AccountReference": "Captain",
+                "TransactionDesc": "captain"
+            }
+            
+
+            # POPULAING THE HTTP HEADER
+            headers = {
+                "Authorization": access_token,
+                "Content-Type": "application/json"
+            }
+
+            url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"  # C2B URL
+
+            response = requests.post(url, json=payload, headers=headers)
+            print(response.text)
+            return 'Please Complete Payment in Your Phone'
+        else:
+            return 'Not successful'
 
 
 
